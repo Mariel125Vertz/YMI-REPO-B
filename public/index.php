@@ -11,10 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+$base = dirname(__DIR__); 
 
-$base = dirname(__DIR__);
-
-// Usa la variable $base para construir las rutas de forma absoluta
+// Construimos la ruta absoluta correctamente, sin doble barra
 require $base . "/config/database.php";
 require $base . "/models/usuario.php";
 require $base . "/models/tareasModels.php";
