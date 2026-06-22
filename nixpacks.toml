@@ -2,7 +2,7 @@
 nixPkgs = ["php83", "composer"]
 
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = ["cd backend && composer install --no-dev --optimize-autoloader"]
 
 [start]
-cmd = "php -S 0.0.0.0:${PORT} -t public"
+cmd = "php -S 0.0.0.0:${PORT} -t backend/public"
