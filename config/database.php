@@ -1,9 +1,10 @@
 <?php
 
-$host = "localhost";
-$user = "root";
-$password = "mariloks";
-$db = "notion";
+$host = "mysql.railway.internal"; 
+$user = "root";                   
+$password = "eRdvKWXQghcOoZwrwQQzwJOAnYDoiga"; 
+$db = "railway";                
+$port = 3306;
 
 $conexion = new mysqli($host, $user, $password, $db);
 
