@@ -3,7 +3,7 @@
 $host = 'mysql.railway.internal';
 $user = 'root';
 $pass = 'iSEJuNYrtspXucReBwyYbNnaZxtcmXQU';
-$db   = 'railway';
+$db = 'notion';
 $port = 3306;
 
 // Conexión forzada
