@@ -12,12 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 
-require "../config/database.php";
-require "../models/usuario.php";
-require "../models/tareasModels.php";
-require "../models/notasModels.php";
-require "../controllers/AuthController.php";
-require "../controllers/tareasController.php";
-require "../controllers/notasController.php";
-require "../controllers/PagoController.php";
-require "../routes/api.php";
+$baseDir = dirname(__DIR__); 
+require $baseDir . "/config/database.php";
+require $baseDir . "/models/usuario.php";
+require $baseDir . "/models/tareasModels.php";
+require $baseDir . "/models/notasModels.php";
+require $baseDir . "/controllers/AuthController.php";
+require $baseDir . "/controllers/tareasController.php";
+require $baseDir . "/controllers/notasController.php";
+require $baseDir . "/controllers/PagoController.php";
+require $baseDir . "/routes/api.php";
