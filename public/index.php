@@ -12,13 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 
-$root = dirname(__DIR__); 
-require $root . "/config/database.php";
-require $root . "/models/usuario.php";
-require $root . "/models/tareasModels.php";
-require $root . "/models/notasModels.php";
-require $root . "/controllers/AuthController.php";
-require $root . "/controllers/tareasController.php";
-require $root . "/controllers/notasController.php";
-require $root . "/controllers/PagoController.php";
-require $root . "/routes/api.php";
+$base = dirname(__DIR__);
+
+// Usa la variable $base para construir las rutas de forma absoluta
+require $base . "/config/database.php";
+require $base . "/models/usuario.php";
+require $base . "/models/tareasModels.php";
+require $base . "/models/notasModels.php";
+require $base . "/controllers/AuthController.php";
+require $base . "/controllers/tareasController.php";
+require $base . "/controllers/notasController.php";
+require $base . "/controllers/PagoController.php";
+require $base . "/routes/api.php";
