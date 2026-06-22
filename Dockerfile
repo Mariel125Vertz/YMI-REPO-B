@@ -15,4 +15,5 @@ EXPOSE 8080
 
 # ARRANCAMOS EL SERVIDOR NATIVO DE PHP
 # Esto hace que PHP sirva los archivos directamente desde la carpeta 'public'
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "public", "index.php"]
+# Cambia tu CMD por esta línea:
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "/var/www/html/public", "/var/www/html/public/index.php"]
