@@ -10,13 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+$raiz = dirname(__DIR__); 
 
-require "/config/database.php";
-require "/models/usuario.php";
-require "/models/tareasModels.php";
-require "/models/notasModels.php";
-require "/controllers/AuthController.php";
-require "/controllers/tareasController.php";
-require "/controllers/notasController.php";
-require "/controllers/PagoController.php";
-require "/routes/api.php";
+require $raiz . "/config/database.php";
+require $raiz . "/models/usuario.php";
+require $raiz . "/models/tareasModels.php";
+require $raiz . "/models/notasModels.php";
+require $raiz . "/controllers/AuthController.php";
+require $raiz . "/controllers/tareasController.php";
+require $raiz . "/controllers/notasController.php";
+require $raiz . "/controllers/PagoController.php";
+require $raiz . "/routes/api.php";
+?>
