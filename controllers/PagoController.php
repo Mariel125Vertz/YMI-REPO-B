@@ -30,8 +30,8 @@ class PagoController
                     ]
                 ],
                 "mode" => "payment",
-                "success_url" => "http://localhost:5173/premium?status=success",
-                "cancel_url" => "http://localhost:5173/premium?status=cancel"
+                "success_url" => "https://ymi-repo-mfqa5go9e-mariel125vertzs-projects.vercel.app/premium?status=success",
+                "cancel_url" => "https://ymi-repo-mfqa5go9e-mariel125vertzs-projects.vercel.app/premium?status=cancel"
             ]);
 
             echo json_encode(["url" => $session->url]);
