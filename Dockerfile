@@ -3,11 +3,11 @@ FROM php:8.2-apache
 # Instalamos extensiones necesarias
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# 1. ELIMINAMOS TODOS los módulos MPM antes de empezar
-# Esto evita el error "More than one MPM loaded"
+# 1. ELIMINAMOS cualquier configuración previa de MPM
+# Esto es lo que causaba el conflicto
 RUN rm -f /etc/apache2/mods-enabled/mpm_*.load
 
-# 2. Habilitamos ÚNICAMENTE prefork (obligatorio para PHP)
+# 2. Habilitamos ÚNICAMENTE mpm_prefork (necesario para PHP)
 RUN a2enmod mpm_prefork
 
 # 3. Copiamos tus archivos
