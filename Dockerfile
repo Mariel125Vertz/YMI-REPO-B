@@ -3,19 +3,21 @@ FROM php:8.2-apache
 # Instalamos extensiones
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# 1. Borramos cualquier configuración de MPM existente para evitar el conflicto
-RUN rm -f /etc/apache2/mods-enabled/mpm_*.load
+# Instalamos herramientas para debug (opcional, ayuda a ver qué pasa)
+RUN apt-get update && apt-get install -y iputils-ping
 
-# 2. Habilitamos ÚNICAMENTE prefork (el estándar para PHP)
-RUN a2enmod mpm_prefork
+# 1. Limpieza de módulos (esto es vital para evitar el error de MPM)
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
 
-# 3. Copiamos los archivos
+# 2. Copiamos todo el contenido del repositorio al directorio de trabajo de Apache
+# Usamos el punto para indicar que todo lo de tu repo va a /var/www/html/
 COPY . /var/www/html/
 
-# 4. Ajustamos Apache para que use /public como raíz
+# 3. Ajustamos la configuración de Apache para apuntar a la subcarpeta 'public'
+# Esto cambia el DocumentRoot globalmente
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# 5. Damos permisos
+# 4. Asignamos permisos correctos para que Apache pueda leer los archivos
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
