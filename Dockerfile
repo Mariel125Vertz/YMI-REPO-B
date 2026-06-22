@@ -1,16 +1,26 @@
-# Usamos una imagen que ya trae Nginx y PHP-FPM configurados profesionalmente
-FROM trafex/alpine-php82:latest
+FROM php:8.2-apache
 
-# Copiamos tus archivos
+# Instalamos las extensiones necesarias para tu base de datos
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# 1. ELIMINACIÓN RADICAL: Borramos cualquier rastro de otros módulos MPM
+# antes de que Apache tenga oportunidad de cargarlos
+RUN rm -f /etc/apache2/mods-enabled/mpm_*.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_*.conf
+
+# 2. Habilitamos ÚNICAMENTE mpm_prefork (necesario para PHP)
+RUN a2enmod mpm_prefork
+
+# 3. Copiamos los archivos de tu proyecto
 COPY . /var/www/html/
 
-# IMPORTANTE: Configuramos Nginx para que apunte a la carpeta 'public'
-# En esta imagen, el archivo de configuración de Nginx está aquí:
-RUN sed -i 's|root /var/www/html;|root /var/www/html/public;|g' /etc/nginx/nginx.conf
+# 4. Ajustamos la configuración de Apache para que el DocumentRoot sea /public
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Damos permisos
-USER root
-RUN chown -R nobody:nobody /var/www/html
-USER nobody
+# 5. Ajustamos permisos para que el servidor pueda leer tus archivos
+RUN chown -R www-data:www-data /var/www/html
 
-EXPOSE 8080
+EXPOSE 80
+
+# 6. Forzamos el arranque en primer plano sin configuraciones extra
+CMD ["apache2-foreground"]
