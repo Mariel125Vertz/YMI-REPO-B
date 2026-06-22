@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $base = dirname(__DIR__); 
 
 // Construimos la ruta absoluta correctamente, sin doble barra
-require $base . "/config/database.php";
+require "/app/config/database.php";
 require $base . "/models/usuario.php";
 require $base . "/models/tareasModels.php";
 require $base . "/models/notasModels.php";
