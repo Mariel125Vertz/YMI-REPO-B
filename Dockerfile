@@ -1,26 +1,15 @@
-# Imagen de PHP con Apache
-FROM php:8.3-apache
+# Usa una imagen de PHP con Apache
+FROM php:8.2-apache
 
-# Extensiones necesarias para MySQL
-RUN docker-php-ext-install pdo pdo_mysql mysqli
-
-# Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /var/www/html
 
-# Copiamos todo el proyecto
+# Copia todo el contenido de la raíz a la carpeta del servidor
 COPY . .
 
-# El composer.json vive dentro de public/, así que instalamos ahí
-WORKDIR /var/www/html/public
-RUN composer install --no-dev --optimize-autoloader
+# IMPORTANTE: Configura Apache para que apunte a la carpeta 'public'
+# Esto le dice a Apache que el "Document Root" es la carpeta /var/www/html/public
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Apache debe servir desde /var/www/html/public
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
-
-# Permisos
-RUN chown -R www-data:www-data /var/www/html
-
+# Exponer el puerto
 EXPOSE 80
