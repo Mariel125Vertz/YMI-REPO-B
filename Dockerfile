@@ -1,18 +1,27 @@
-# Usamos una imagen base optimizada con Nginx y PHP-FPM
-FROM trafex/alpine-php82:latest
+FROM php:8.2-fpm-alpine
 
-# Copiamos todo el contenido de tu repositorio al directorio web
+# Instalamos Apache y los módulos necesarios
+RUN apk add --no-cache apache2 apache2-proxy php82-apache2
+
+# Instalamos extensiones de PHP necesarias
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# Configuramos Apache para usar PHP-FPM
+# Copiamos un archivo de configuración mínimo que no tenga conflictos de MPM
+RUN echo 'LoadModule mpm_event_module modules/mod_mpm_event.so' > /etc/apache2/conf.d/mpm.conf && \
+    echo 'LoadModule proxy_module modules/mod_proxy.so' >> /etc/apache2/conf.d/mpm.conf && \
+    echo 'LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so' >> /etc/apache2/conf.d/mpm.conf
+
+# Copiamos tus archivos
 COPY . /var/www/html/
 
-# Configuramos Nginx para que el 'Document Root' sea la carpeta /public
-# Esto es equivalente a lo que intentábamos hacer con Apache
-USER root
-RUN sed -i 's|root /var/www/html;|root /var/www/html/public;|g' /etc/nginx/nginx.conf
+# Ajustamos la raíz a la carpeta 'public'
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/httpd.conf
 
-# Ajustamos los permisos para el usuario 'nobody' que usa esta imagen
-RUN chown -R nobody:nobody /var/www/html
+# Permisos
+RUN chown -R apache:apache /var/www/html
 
-USER nobody
+EXPOSE 80
 
-# Exponemos el puerto estándar
-EXPOSE 8080
+# Comando para iniciar Apache en primer plano
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
