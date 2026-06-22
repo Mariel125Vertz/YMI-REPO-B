@@ -1,15 +1,17 @@
-# Usa una imagen de PHP con Apache
+# Usamos una imagen de PHP con Apache
 FROM php:8.2-apache
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /var/www/html
+# Instalamos extensiones necesarias (p.ej. mysqli para tu base de datos)
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copia todo el contenido de la raíz a la carpeta del servidor
-COPY . .
+# Copiamos todo el contenido de tu repo a la carpeta raíz de Apache
+COPY . /var/www/html/
 
-# IMPORTANTE: Configura Apache para que apunte a la carpeta 'public'
-# Esto le dice a Apache que el "Document Root" es la carpeta /var/www/html/public
+# IMPORTANTE: Configuramos Apache para que use 'public' como raíz
+# Esto sobreescribe la configuración por defecto de Apache
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Exponer el puerto
+# Damos permisos correctos
+RUN chown -R www-data:www-data /var/www/html
+
 EXPOSE 80
