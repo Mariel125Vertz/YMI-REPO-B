@@ -1,27 +1,18 @@
-FROM php:8.2-fpm-alpine
+# Usamos una imagen de PHP básica
+FROM php:8.2-cli
 
-# Instalamos Apache y los módulos necesarios
-RUN apk add --no-cache apache2 apache2-proxy php82-apache2
-
-# Instalamos extensiones de PHP necesarias
+# Instalamos extensiones necesarias
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Configuramos Apache para usar PHP-FPM
-# Copiamos un archivo de configuración mínimo que no tenga conflictos de MPM
-RUN echo 'LoadModule mpm_event_module modules/mod_mpm_event.so' > /etc/apache2/conf.d/mpm.conf && \
-    echo 'LoadModule proxy_module modules/mod_proxy.so' >> /etc/apache2/conf.d/mpm.conf && \
-    echo 'LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so' >> /etc/apache2/conf.d/mpm.conf
+# Copiamos todo tu código al contenedor
+COPY . /var/www/html
 
-# Copiamos tus archivos
-COPY . /var/www/html/
+# Nos movemos a la carpeta de tu aplicación
+WORKDIR /var/www/html
 
-# Ajustamos la raíz a la carpeta 'public'
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/httpd.conf
+# Exponemos el puerto 8080 (que es el que Railway suele usar)
+EXPOSE 8080
 
-# Permisos
-RUN chown -R apache:apache /var/www/html
-
-EXPOSE 80
-
-# Comando para iniciar Apache en primer plano
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+# ARRANCAMOS EL SERVIDOR NATIVO DE PHP
+# Esto hace que PHP sirva los archivos directamente desde la carpeta 'public'
+CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
