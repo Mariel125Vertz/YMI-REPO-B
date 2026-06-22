@@ -11,15 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$base = dirname(__DIR__); 
-
-// Construimos la ruta absoluta correctamente, sin doble barra
-require "/app/config/database.php";
-require $base . "/models/usuario.php";
-require $base . "/models/tareasModels.php";
-require $base . "/models/notasModels.php";
-require $base . "/controllers/AuthController.php";
-require $base . "/controllers/tareasController.php";
-require $base . "/controllers/notasController.php";
-require $base . "/controllers/PagoController.php";
-require $base . "/routes/api.php";
+require "/config/database.php";
+require "/models/usuario.php";
+require "/models/tareasModels.php";
+require "/models/notasModels.php";
+require "/controllers/AuthController.php";
+require "/controllers/tareasController.php";
+require "/controllers/notasController.php";
+require "/controllers/PagoController.php";
+require "/routes/api.php";
