@@ -1,17 +1,18 @@
-# Usamos una imagen de PHP con Apache
 FROM php:8.2-apache
 
-# Instalamos extensiones necesarias (p.ej. mysqli para tu base de datos)
+# Instalamos extensiones necesarias
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copiamos todo el contenido de tu repo a la carpeta raíz de Apache
+# 1. SOLUCIÓN AL ERROR MPM: Deshabilitamos el módulo conflictivo y habilitamos prefork
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+
+# Copiamos todo el contenido
 COPY . /var/www/html/
 
-# IMPORTANTE: Configuramos Apache para que use 'public' como raíz
-# Esto sobreescribe la configuración por defecto de Apache
+# Configuramos Apache para que use 'public'
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Damos permisos correctos
+# Permisos
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
